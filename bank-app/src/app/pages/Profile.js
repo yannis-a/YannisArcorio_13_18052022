@@ -1,6 +1,6 @@
 import React from "react";
 
-const User = () => {
+const Profile = () => {
   return (
     <div className="main bg-dark">
       <div className="header">
@@ -46,4 +46,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Profile;

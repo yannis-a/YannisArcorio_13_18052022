@@ -5,7 +5,7 @@ import Error from "./app/pages/Error";
 import Nav from "./app/components/Nav";
 import Footer from "./app/components/Footer";
 import Login from "./app/pages/Login";
-import User from "./app/pages/User";
+import Profile from "./app/pages/Profile";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/profile" element={<Profile />} />
         <Route
           path="/*"
           element={
