@@ -1,13 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginAsync = createAsyncThunk(
-  'user/login',
-  async (amount) => {
-    const response = new Promise((resolve) =>
-    setTimeout(() => resolve({ data: amount }), 5000)
-  );
-    // The value we return becomes the `fulfilled` action payload
-    return response;
+  "user/login",
+  async ({ username, password }, thunkAPI) => {
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email : username,
+        password : password,
+      }),
+    };
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/user/login", options);
+      let data = await response.json();
+      
+      if (response.status === 200) {
+        localStorage.setItem("token", data.token);
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue(data);
+      }
+    } catch (error) {
+      console.log("Error", error.response.data);
+      thunkAPI.rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -25,24 +45,30 @@ export const userSlice = createSlice({
   },
   reducers: {
     login: (state, action) => {
-      localStorage.setItem('user', JSON.stringify(state));
+      localStorage.setItem("user", JSON.stringify(state));
       return { ...state, token: "je suis le token" };
     },
     logout: () => {
-      localStorage.removeItem('user');
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
         state.isFetching = true;
-        console.log("en train de fetch");
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
+        state.email = action.payload.email;
+        state.username = action.payload.name;
         state.isFetching = false;
         state.isSuccess = true;
-        console.log(action);
-        state.token += action.payload.data;
+        return state;
+      })
+      .addCase(loginAsync.rejected, (state, action) => {
+        console.log("action",action);
+        state.isFetching = false;
+        state.isError = true;
+        state.errorMessage = action.error.message;
       });
   },
 });

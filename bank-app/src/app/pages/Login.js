@@ -1,38 +1,29 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getToken, login, getUser, logout, loginAsync } from "../../features/user/userSlice";
+import { useDispatch } from "react-redux";
+import { loginAsync } from "../../features/user/userSlice";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
-  const token = useSelector(getToken);
-  const onSubmit = () => {
-    dispatch(loginAsync("salut"));
+  const { handleSubmit, register } = useForm();
+  const onSubmit = (data) => {
+    console.log("data par ici ", data);
+    dispatch(loginAsync(data));
   };
-  const onLogout = () => {
-    dispatch(logout());
-  };
-  console.log(user);
-  console.log(token);
+
   return (
     <div className="main bg-dark">
-      <button className="sign-in-button" onClick={onLogout}>
-            logout
-          </button>
-          <button className="sign-in-button" onClick={onSubmit}>
-            login
-          </button>
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
-        <form onSubmit={onSubmit} method="POST">
+        <form onSubmit={handleSubmit(onSubmit)} method="POST">
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            <input type="text" id="username" />
+            <input {...register("username")} type="text" id="username" />
           </div>
           <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" />
+            <input {...register("password")} type="password" id="password" />
           </div>
           <div className="input-remember">
             <input type="checkbox" id="remember-me" />
