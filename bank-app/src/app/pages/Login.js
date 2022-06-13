@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 
 const Login = () => {
   const dispatch = useDispatch();
+
   const { handleSubmit, register } = useForm();
+
   const onSubmit = (data) => {
-    console.log("data par ici ", data);
     dispatch(loginAsync(data));
   };
 

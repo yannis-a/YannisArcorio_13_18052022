@@ -1,78 +1,114 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { GetProfile, UpdateProfile } from "../../services/api";
 
-export const loginAsync = createAsyncThunk(
-  "user/login",
-  async ({ username, password }, thunkAPI) => {
-    const options = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email : username,
-        password : password,
-      }),
-    };
-    try {
-      const response = await fetch("http://localhost:3001/api/v1/user/login", options);
-      let data = await response.json();
-      
-      if (response.status === 200) {
-        localStorage.setItem("token", data.token);
-        return data;
-      } else {
-        return thunkAPI.rejectWithValue(data);
-      }
-    } catch (error) {
-      console.log("Error", error.response.data);
-      thunkAPI.rejectWithValue(error.response.data);
-    }
+const initialState = {
+  firstName: "",
+  lastName: "",
+  editMode: false,
+  errorMessage: "",
+  hasErrorMessage: false,
+  isTokenValid: true,
+};
+
+export const profileAsync = createAsyncThunk("user/profile", async (token) => {
+  const response = await GetProfile(token);
+
+  return response;
+});
+
+export const updateProfileAsync = createAsyncThunk(
+  "user/updateProfile",
+  async ({ firstName, lastName, token }) => {
+    const response = await UpdateProfile({ firstName, lastName, token });
+
+    return response;
   }
 );
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: {
-    firstname: "",
-    lastname: "",
-    email: "",
-    isFetching: false,
-    isSuccess: false,
-    isError: false,
-    errorMessage: "",
-    token: "",
-  },
+  initialState,
   reducers: {
-    login: (state, action) => {
-      localStorage.setItem("user", JSON.stringify(state));
-      return { ...state, token: "je suis le token" };
+    resetUser: (state) => {
+      state.firstName = "";
+      state.lastName = "";
     },
-    logout: () => {
-      localStorage.removeItem("user");
+    setEditMode: (state, action) => {
+      state.editMode = action.payload;
+    },
+    setEditHasErrorMessage: (state, action) => {
+      state.hasErrorMessage = action.payload;
+    },
+    resetTokenValidity: (state) => {
+      state.isTokenValid = true;
     },
   },
+  // Handle all the status case of the return value of the API
+  // Update the state accordingly
   extraReducers: (builder) => {
     builder
-      .addCase(loginAsync.pending, (state) => {
-        state.isFetching = true;
+      .addCase(profileAsync.fulfilled, (state, action) => {
+        switch (action.payload.status) {
+          case 200:
+            state.firstName = action.payload.body.firstName;
+            state.lastName = action.payload.body.lastName;
+            state.hasErrorMessage = false;
+            state.errorMessage = "";
+            state.isTokenValid = true;
+            break;
+          case 401:
+            state.isTokenValid = false;
+            break;
+          case 500:
+          case 501:
+            state.hasErrorMessage = true;
+            state.errorMessage = "Internal Server Error";
+            break;
+          default:
+            break;
+        }
       })
-      .addCase(loginAsync.fulfilled, (state, action) => {
-        state.email = action.payload.email;
-        state.username = action.payload.name;
-        state.isFetching = false;
-        state.isSuccess = true;
-        return state;
+      .addCase(profileAsync.rejected, (state) => {
+        state.firstName = "";
+        state.lastName = "";
       })
-      .addCase(loginAsync.rejected, (state, action) => {
-        console.log("action",action);
-        state.isFetching = false;
-        state.isError = true;
-        state.errorMessage = action.error.message;
+      .addCase(updateProfileAsync.fulfilled, (state, action) => {
+        switch (action.payload.status) {
+          case 200:
+            state.firstName = action.payload.body.firstName;
+            state.lastName = action.payload.body.lastName;
+            state.editMode = false;
+            state.hasErrorMessage = false;
+            state.errorMessage = "Please fill both first and last name";
+            break;
+          case 400:
+            state.hasErrorMessage = true;
+            state.errorMessage = "Invalid fields";
+            break;
+          case 500:
+          case 501:
+            state.hasErrorMessage = true;
+            state.errorMessage = "Internal error";
+            break;
+          default:
+            break;
+        }
+      })
+      .addCase(updateProfileAsync.rejected, () => {
+        console.log("Your profile update was rejected.");
       });
   },
 });
 
-export const getToken = (state) => state.user.token;
-export const getUser = (state) => state.user;
-export const { login, logout } = userSlice.actions;
+// Export of actions (reducer) that allow us to dispatch them
+export const {
+  resetUser,
+  setEditMode,
+  setEditHasErrorMessage,
+  resetTokenValidity,
+} = userSlice.actions;
+// Exports of the selector that allow us to access state
+export const selectUser = (state) => state.user;
+export const selectIsTokenValid = (state) => state.user.isTokenValid;
+// Export of the reducer for the store
+export default userSlice.reducer;

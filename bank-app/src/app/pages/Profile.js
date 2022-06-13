@@ -1,13 +1,22 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { getUser } from "../../features/user/userSlice";
+import Error from "./Error";
 
 const Profile = () => {
+  const user = useSelector(getUser);
+  console.log(user);
+  if (!user.Success) {
+    return <Error title="Utilisateur non identifié" content="" />;
+  }
+
   return (
     <div className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {user.Firstname} {user.Lastname}
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>
