@@ -5,7 +5,9 @@ import Error from "./app/pages/Error";
 import Nav from "./app/components/Nav";
 import Footer from "./app/components/Footer";
 import Login from "./app/pages/Login";
+import { Logout } from "./app/components/Logout";
 import Profile from "./app/pages/Profile";
+import { ProtectedRoute } from "./app/components/ProtectedRoute";
 
 function App() {
   return (
@@ -14,7 +16,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/logout" element={<Logout />} />
         <Route
           path="/*"
           element={
@@ -25,7 +35,7 @@ function App() {
           }
         />
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

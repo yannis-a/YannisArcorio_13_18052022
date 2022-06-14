@@ -1,11 +1,28 @@
 import React from "react";
+import { useAppSelector, useAppDispatch } from "../hook";
+import { selectUser, resetUser } from "../../features/user/userSlice";
+import { resetToken, selectToken } from "../../features/user/tokenSlice";
+import { setIsSuccessful } from "../../features/user/signupSlice";
+import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle, faSignOut } from "@fortawesome/free-solid-svg-icons";
-import { getUser } from "../../features/user/userSlice";
-import { useSelector } from "react-redux";
+import {
+  faUserCircle,
+  faSignOut,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
-  const user = useSelector(getUser);
+  const dispatch = useAppDispatch();
+
+  const user = useAppSelector(selectUser);
+  const token = useAppSelector(selectToken);
+
+  function logOut() {
+    dispatch(resetUser());
+    dispatch(resetToken());
+    dispatch(setIsSuccessful(false));
+  }
 
   return (
     <nav className="main-nav">
@@ -17,23 +34,27 @@ const Nav = () => {
         />
         <h1 className="sr-only">Argent Bank</h1>
       </a>
-      {user.isSuccess ? (
+      {token ? (
         <div>
-          <a className="main-nav-item" href="./user">
+          <Link className="main-nav-item" to="user">
             <FontAwesomeIcon icon={faUserCircle} />
-            Tony
-          </a>
-          <a className="main-nav-item" href="/">
+            {user.FirstName}
+          </Link>
+          <Link className="main-nav-item" to="/" onClick={logOut}>
             <FontAwesomeIcon icon={faSignOut} />
             Sign Out
-          </a>
+          </Link>
         </div>
       ) : (
         <div>
-          <a className="main-nav-item" href="./login">
+          <Link className="main-nav-item" to="signup">
+            <FontAwesomeIcon icon={faUserPlus} />
+            Sign up
+          </Link>
+          <Link className="main-nav-item" to="login">
             <FontAwesomeIcon icon={faUserCircle} />
             Sign In
-          </a>
+          </Link>
         </div>
       )}
     </nav>

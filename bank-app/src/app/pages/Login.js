@@ -1,33 +1,85 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { loginAsync } from "../../features/user/userSlice";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../hook";
+import { Navigate } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  selectErrorMessage,
+  selectToken,
+  selectHasErrorMessage,
+  loginAsync,
+  setHasErrorMessage,
+} from "../../features/user/tokenSlice";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { handleSubmit, register } = useForm();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
 
-  const onSubmit = (data) => {
-    dispatch(loginAsync(data));
+  const errorMessage = useAppSelector(selectErrorMessage);
+  const token = useAppSelector(selectToken);
+  const hasErrorMessage = useAppSelector(selectHasErrorMessage);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(loginAsync({ email, password, remember }));
   };
+
+  useEffect(() => {
+    async function dispatchSetHasErrorMessage() {
+      dispatch(setHasErrorMessage(false));
+    }
+
+    dispatchSetHasErrorMessage();
+  }, [dispatch]);
+
+  let displayErrorMessage;
+  if (hasErrorMessage) {
+    displayErrorMessage = <p className="sign-in-error">{errorMessage}</p>;
+  } else {
+    displayErrorMessage = null;
+  }
+
+  if (token) {
+    return <Navigate to="/profile" />;
+  }
 
   return (
     <div className="main bg-dark">
       <section className="sign-in-content">
-        <i className="fa fa-user-circle sign-in-icon"></i>
+        <FontAwesomeIcon icon={faUserCircle} />
         <h1>Sign In</h1>
-        <form onSubmit={handleSubmit(onSubmit)} method="POST">
+        {displayErrorMessage}
+        <form onSubmit={onSubmit} method="POST">
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            <input {...register("username")} type="text" id="username" />
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+            />
           </div>
           <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            <input {...register("password")} type="password" id="password" />
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              id="password"
+            />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="remember-me" />
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
             <label htmlFor="remember-me">Remember me</label>
           </div>
           <button type="submit" className="sign-in-button">
