@@ -6,7 +6,11 @@ html {
   color: #2c3e50;
 }
 
-body, .App {
+body {
+  margin: 0;
+}
+
+.App {
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -51,13 +55,22 @@ body, .App {
   color: #42b983;
 }
 
+.main-nav div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
 .main-nav-item {
   text-decoration: none;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 .main-nav-item:hover {
   text-decoration: underline;
+}
+
+.main-nav-item-logo {
+  margin-right: 0.25rem;
 }
 
 .main-nav-logo {
@@ -71,7 +84,7 @@ body, .App {
 }
 
 .hero {
-  background-image: url('../../public/img/bank-tree.jpeg');
+  background-image: url("../../public/img/bank-tree.jpeg");
   background-position: 0 -50px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -178,6 +191,12 @@ body, .App {
   font-size: 5rem;
 }
 
+.sign-in-error {
+  color: red;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
 .input-remember {
   display: flex;
 }
@@ -259,9 +278,47 @@ body, .App {
   padding: 10px;
 }
 
+.edit-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.edit-input-container input:first-child,
+.edit-button-container button:first-child {
+  margin-right: 10px;
+}
+
+.edit-input {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.edit-user-button {
+  padding: 8px;
+  border-radius: 0.25rem;
+  border: none;
+  width: 75px;
+  cursor: pointer;
+}
+
+.edit-error {
+  color: red;
+  margin-bottom: 10px;
+}
+
 .header {
   color: #fff;
   margin-bottom: 2rem;
+}
+
+.profile-internal-error {
+  color: red;
+  font-size: 2rem;
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
 }
 
 .transaction-button {

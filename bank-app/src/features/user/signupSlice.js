@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { signUpPost } from "../../services/signUpPost";
+import { SignUp } from "../../services/api";
 
 // Default values of states
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
 export const signUpAsync = createAsyncThunk(
   "signUp",
   async ({ email, password, firstName, lastName }) => {
-    const response = await signUpPost({ email, password, firstName, lastName });
+    const response = await SignUp({ email, password, firstName, lastName });
 
     return response;
   }
