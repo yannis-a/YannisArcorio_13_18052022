@@ -1,13 +1,68 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { getUser } from "../../features/user/userSlice";
-import Error from "./Error";
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../hook";
+import {
+  profileAsync,
+  selectIsTokenValid,
+  selectUser,
+  setEditMode,
+} from "../../features/user/userSlice";
+import { Navigate } from "react-router-dom";
+import { selectToken } from "../../features/user/tokenSlice";
+import { Account } from "../components/Account";
+import { Edit } from "../components/Edit";
 
 const Profile = () => {
-  const user = useSelector(getUser);
-  console.log(user);
-  if (!user.Success) {
-    return <Error title="Utilisateur non identifié" content="" />;
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const token = useAppSelector(selectToken);
+  const isTokenValid = useAppSelector(selectIsTokenValid);
+
+  console.log(user)
+  useEffect(() => {
+    async function getProfileData() {
+      dispatch(profileAsync(token));
+    }
+
+    getProfileData();
+  }, [dispatch, token]);
+
+  function handleDisplayEdit() {
+    dispatch(setEditMode(true));
+  }
+
+  if (!isTokenValid) {
+    return <Navigate to="/logout" />;
+  }
+
+  if (user.editMode) {
+    return (
+      <main className="main bg-dark">
+        <div className="header">
+          <h1>
+            Welcome back
+            <br />
+            {user.firstName} {user.lastName} !
+          </h1>
+        </div>
+        <Edit
+          firstName={user.firstName}
+          lastName={user.lastName}
+          token={token}
+        />
+        <h2 className="sr-only">Accounts</h2>
+        <Account />
+      </main>
+    );
+  }
+
+  if (user.hasErrorMessage) {
+    return (
+      <main className="main bg-dark">
+        <span className="profile-internal-error">{user.hasErrorMessage}</span>
+        <h2 className="sr-only">Accounts</h2>
+        <Account />
+      </main>
+    );
   }
 
   return (
@@ -16,41 +71,14 @@ const Profile = () => {
         <h1>
           Welcome back
           <br />
-          {user.Firstname} {user.Lastname}
+          {user.firstName} {user.lastName}
         </h1>
-        <button className="edit-button">Edit Name</button>
+        <button className="edit-button" onClick={() => handleDisplayEdit()}>
+          Edit Name
+        </button>
       </div>
       <h2 className="sr-only">Accounts</h2>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Checking (x8349)</h3>
-          <p className="account-amount">$2,082.79</p>
-          <p className="account-amount-description">Available Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Savings (x6712)</h3>
-          <p className="account-amount">$10,928.42</p>
-          <p className="account-amount-description">Available Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
-      <section className="account">
-        <div className="account-content-wrapper">
-          <h3 className="account-title">Argent Bank Credit Card (x8349)</h3>
-          <p className="account-amount">$184.30</p>
-          <p className="account-amount-description">Current Balance</p>
-        </div>
-        <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
-        </div>
-      </section>
+      <Account />
     </div>
   );
 };
