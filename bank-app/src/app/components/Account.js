@@ -20,20 +20,18 @@ export function Account() {
   ];
 
   const transactions = accountsData.map((account, index) => (
-    <Transaction
-      transactionTitle={account.title}
-      transactionAmount={account.amount}
-      transactionAmountDescription={account.description}
-      key={index}
-    />
-  ));
-
-  return (
-    <section className="account">
-      {transactions}
+    <div className="account-content">
+      <Transaction
+        transactionTitle={account.title}
+        transactionAmount={account.amount}
+        transactionAmountDescription={account.description}
+        key={index}
+      />
       <div className="account-content-wrapper cta">
         <button className="transaction-button">View transactions</button>
       </div>
-    </section>
-  );
+    </div>
+  ));
+
+  return <section className="accounts">{transactions}</section>;
 }

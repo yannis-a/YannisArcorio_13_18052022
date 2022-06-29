@@ -38,7 +38,7 @@ const Nav = () => {
         <div>
           <Link className="main-nav-item" to="user">
             <FontAwesomeIcon icon={faUserCircle} />
-            {user.FirstName}
+            {user.firstName}
           </Link>
           <Link className="main-nav-item" to="/" onClick={logOut}>
             <FontAwesomeIcon icon={faSignOut} />

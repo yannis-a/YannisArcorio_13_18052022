@@ -233,15 +233,14 @@ body {
   padding: 0;
 }
 
-.account {
+.accounts > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
   background-color: #fff;
   width: 80%;
   margin: 0 auto;
-  flex-direction: column;
+  flex-direction: row;
   padding: 1.5rem;
   box-sizing: border-box;
   text-align: left;
@@ -333,16 +332,14 @@ body {
   color: #fff;
 }
 
-@media (min-width: 720px) {
-  .account {
-    flex-direction: row;
+@media (max-width: 720px) {
+  .accounts .account-content {
+    flex-direction: column;
   }
-
-  .account-content-wrapper.cta {
-    flex: 0;
-  }
-
-  .transaction-button {
-    width: 200px;
-  }
+}
+.transaction-button {
+  width: 200px;
+}
+.account-content-wrapper.cta {
+  flex: 0;
 }
