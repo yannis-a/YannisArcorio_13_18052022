@@ -36,7 +36,7 @@ const Nav = () => {
       </a>
       {token ? (
         <div>
-          <Link className="main-nav-item" to="user">
+          <Link className="main-nav-item" to="profile">
             <FontAwesomeIcon icon={faUserCircle} />
             {user.firstName}
           </Link>
