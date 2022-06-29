@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserCircle,
   faSignOut,
-  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
@@ -37,23 +36,16 @@ const Nav = () => {
       {token ? (
         <div>
           <Link className="main-nav-item" to="profile">
-            <FontAwesomeIcon icon={faUserCircle} />
-            {user.firstName}
+            <FontAwesomeIcon icon={faUserCircle} /> {user.firstName}
           </Link>
           <Link className="main-nav-item" to="/" onClick={logOut}>
-            <FontAwesomeIcon icon={faSignOut} />
-            Sign Out
+            <FontAwesomeIcon icon={faSignOut} /> Sign Out
           </Link>
         </div>
       ) : (
         <div>
-          <Link className="main-nav-item" to="signup">
-            <FontAwesomeIcon icon={faUserPlus} />
-            Sign up
-          </Link>
           <Link className="main-nav-item" to="login">
-            <FontAwesomeIcon icon={faUserCircle} />
-            Sign In
+            <FontAwesomeIcon icon={faUserCircle} />  Sign In
           </Link>
         </div>
       )}

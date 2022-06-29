@@ -17,7 +17,6 @@ const Profile = () => {
   const token = useAppSelector(selectToken);
   const isTokenValid = useAppSelector(selectIsTokenValid);
 
-  console.log(user)
   useEffect(() => {
     async function getProfileData() {
       dispatch(profileAsync(token));
@@ -36,7 +35,7 @@ const Profile = () => {
 
   if (user.editMode) {
     return (
-      <main className="main bg-dark">
+      <main className="main">
         <div className="header">
           <h1>
             Welcome back
@@ -57,7 +56,7 @@ const Profile = () => {
 
   if (user.hasErrorMessage) {
     return (
-      <main className="main bg-dark">
+      <main className="main">
         <span className="profile-internal-error">{user.hasErrorMessage}</span>
         <h2 className="sr-only">Accounts</h2>
         <Account />
@@ -66,7 +65,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="main bg-dark">
+    <div className="main">
       <div className="header">
         <h1>
           Welcome back

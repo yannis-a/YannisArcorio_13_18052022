@@ -49,7 +49,7 @@ const Login = () => {
   }
 
   return (
-    <div className="main bg-dark">
+    <div className="main">
       <section className="sign-in-content">
         <FontAwesomeIcon icon={faUserCircle} />
         <h1>Sign In</h1>

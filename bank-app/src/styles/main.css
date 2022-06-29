@@ -1,4 +1,4 @@
-html {
+.App {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -6,7 +6,7 @@ html {
   color: #2c3e50;
 }
 
-body {
+.App {
   margin: 0;
 }
 
@@ -19,9 +19,6 @@ body {
 
 .main {
   flex: 1;
-}
-
-.bg-dark {
   background-color: #12002b;
 }
 
@@ -57,7 +54,6 @@ body {
 
 .main-nav div:nth-child(2) {
   display: flex;
-  flex-direction: column;
 }
 
 .main-nav-item {
@@ -100,6 +96,7 @@ body {
   padding: 2rem;
   text-align: left;
   margin: 0 auto;
+  line-height: 1;
 }
 
 .hero-content .subtitle {
@@ -111,6 +108,7 @@ body {
 .hero-content .text {
   margin-bottom: 0;
   font-size: 0.9rem;
+  margin-top: 15px;
 }
 
 @media (min-width: 920px) {
@@ -123,7 +121,7 @@ body {
     position: absolute;
     top: 50px;
     right: 50px;
-    width: 300px;
+    width: 370px;
     margin: 2rem;
   }
 
@@ -148,10 +146,11 @@ body {
 }
 
 .feature-icon {
-  width: 100px;
+  width: 150px;
   border: 10px solid #00bc77;
   border-radius: 50%;
   padding: 1rem;
+  margin-bottom: 20px;
 }
 
 .feature-item {
@@ -164,6 +163,11 @@ body {
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
+}
+
+.feature-item p{
+  line-height: 1;
+  text-align: center;
 }
 
 .sign-in-button {
@@ -226,6 +230,9 @@ body {
   justify-content: center;
   border-top: 2px solid #ccc;
   padding: 2rem 0 1.5rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer-text {
